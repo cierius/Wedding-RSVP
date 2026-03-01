@@ -429,12 +429,12 @@
 
       <div class="section-label">🍂 Will you join us?</div>
       <div class="attend-toggle">
-        <button class="attend-btn" id="btn-yes" onclick="setAttending(true)">
+        <button class="attend-btn" id="btn-yes" onclick="window.setAttending(true)">
           <span class="btn-emoji">🌸</span>
           <span>Joyfully Accepts</span>
           <span class="btn-label">I'll be there!</span>
         </button>
-        <button class="attend-btn" id="btn-no" onclick="setAttending(false)">
+        <button class="attend-btn" id="btn-no" onclick="window.setAttending(false)">
           <span class="btn-emoji">🍃</span>
           <span>Regretfully Declines</span>
           <span class="btn-label">Unable to attend</span>
@@ -502,7 +502,7 @@
         <textarea id="message" placeholder="Share your love and well-wishes for Malena & Kanin…"></textarea>
       </div>
 
-      <button class="submit-btn" onclick="submitRSVP()">Send My RSVP 🍂</button>
+      <button class="submit-btn" onclick="window.submitRSVP()">Send My RSVP 🍂</button>
     </div>
 
     <!-- SUCCESS -->
@@ -515,28 +515,28 @@
 
   <!-- Admin tiny link -->
   <div class="admin-link">
-    <a href="#" onclick="openAdminModal(event)">Malena & Kanin · View Responses</a>
+    <a href="#" onclick="window.openAdminModal(event)">Malena & Kanin · View Responses</a>
   </div>
 
 </div><!-- end page-wrap -->
 
 <!-- ===== PASSWORD MODAL ===== -->
-<div id="pw-modal" class="modal-overlay" onclick="handleOverlayClick(event)">
+<div id="pw-modal" class="modal-overlay" onclick="window.handleOverlayClick(event)">
   <div class="modal-card" id="pw-card">
-    <button class="modal-close" onclick="closeModal('pw-modal')">✕</button>
+    <button class="modal-close" onclick="window.closeModal('pw-modal')">✕</button>
     <div class="modal-leaf">🍁</div>
     <div class="modal-title">Bride & Groom Only</div>
     <p class="modal-sub">Enter your password to view guest responses.</p>
-    <input type="password" id="pw-input" class="modal-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()"/>
+    <input type="password" id="pw-input" class="modal-input" placeholder="Password" onkeydown="if(event.key==='Enter')window.checkPassword()"/>
     <div id="pw-error" class="pw-error">Incorrect password — try again.</div>
-    <button class="modal-btn" onclick="checkPassword()">Unlock Responses 🌿</button>
+    <button class="modal-btn" onclick="window.checkPassword()">Unlock Responses 🌿</button>
   </div>
 </div>
 
 <!-- ===== RESPONSES MODAL ===== -->
-<div id="resp-modal" class="modal-overlay" onclick="handleOverlayClick(event)">
+<div id="resp-modal" class="modal-overlay" onclick="window.handleOverlayClick(event)">
   <div class="modal-card modal-card--wide" id="resp-card">
-    <button class="modal-close" onclick="closeModal('resp-modal')">✕</button>
+    <button class="modal-close" onclick="window.closeModal('resp-modal')">✕</button>
     <div class="modal-title" style="margin-bottom:6px">🍁 Guest Responses</div>
     <div id="stats-row" class="stats-row"></div>
     <div id="guest-list" class="guest-list-scroll"></div>
@@ -687,152 +687,190 @@
   .no-responses { text-align:center; opacity:0.4; font-style:italic; font-family:'Lora',serif; padding:24px 0; font-size:1rem; }
 </style>
 
-<script>
-// ---- DUMMY DATA SEEDER (remove before going live) ----
-async function seedDummyData() {
-  const dummies = [
-    { id: '1700000001000', name: 'Sarah & Tom Whitfield', email: 'swhitfield@email.com', attending: true, plusones: 1, kidmeals: 0, allergies: ['Dairy'], message: "So thrilled for you both! Can't wait to dance the night away 🧡", submitted: 'September 1, 2026' },
-    { id: '1700000002000', name: 'James Okafor', email: 'james.o@gmail.com', attending: true, plusones: 0, kidmeals: 0, allergies: ['Gluten/Wheat'], message: 'Congratulations Malena & Kanin! Wishing you a lifetime of love.', submitted: 'September 3, 2026' },
-    { id: '1700000003000', name: 'Priya Nair', email: 'priya.nair@outlook.com', attending: true, plusones: 1, kidmeals: 2, allergies: ['Nuts', 'Vegan'], message: 'So happy for you! The kids are so excited too 🌸', submitted: 'September 5, 2026' },
-    { id: '1700000004000', name: 'Derek Callahan', email: 'dcallahan@work.com', attending: false, plusones: 0, kidmeals: 0, allergies: [], message: 'So sorry I can\'t make it — sending all my love from afar!', submitted: 'September 7, 2026' },
-    { id: '1700000005000', name: 'Aunt Linda & Uncle Ray', email: 'lindamoss@aol.com', attending: true, plusones: 1, kidmeals: 0, allergies: ['Shellfish'], message: 'We have been waiting for this day for so long. Love you both to the moon! 🍂', submitted: 'September 9, 2026' },
-    { id: '1700000006000', name: 'Chloe Beaumont', email: 'cbeaumont@me.com', attending: false, plusones: 0, kidmeals: 0, allergies: [], message: '', submitted: 'September 10, 2026' },
-  ];
-  for (const d of dummies) {
-    try { await window.storage.set('rsvp:' + d.id, JSON.stringify(d), true); } catch(e) {}
-  }
-}
-seedDummyData();
-// ---- END DUMMY DATA ----
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, orderBy, query, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-let attending = null;
-
-function setAttending(val) {
-  attending = val;
-  document.getElementById('btn-yes').className = 'attend-btn' + (val ? ' active-yes' : '');
-  document.getElementById('btn-no').className = 'attend-btn' + (!val ? ' active-no' : '');
-  document.getElementById('attending-section').className = 'attending-section' + (val ? ' visible' : '');
-}
-
-async function submitRSVP() {
-  const name = document.getElementById('name').value.trim();
-  const email = document.getElementById('email').value.trim();
-  if (!name) { alert('Please enter your name.'); return; }
-  if (attending === null) { alert("Please let us know if you'll be attending."); return; }
-
-  const allergies = Array.from(document.querySelectorAll('input[name="allergy"]:checked')).map(c => c.value);
-  const other = document.getElementById('other-allergy').value.trim();
-  if (other) allergies.push(other);
-
-  const entry = {
-    id: Date.now().toString(),
-    name, email, attending,
-    plusones: attending ? parseInt(document.getElementById('plusones').value) : 0,
-    kidmeals: attending ? parseInt(document.getElementById('kidmeals').value) : 0,
-    allergies,
-    message: document.getElementById('message').value.trim(),
-    submitted: new Date().toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'})
+  // ---- Firebase config ----
+  const firebaseConfig = {
+    apiKey: "AIzaSyBoqopDjYrKM-9TzBxFFMYIQTl5hLXOZ0Y",
+    authDomain: "wedding-rsvp-backend-c95b6.firebaseapp.com",
+    projectId: "wedding-rsvp-backend-c95b6",
+    storageBucket: "wedding-rsvp-backend-c95b6.firebasestorage.app",
+    messagingSenderId: "452257061095",
+    appId: "1:452257061095:web:470d8c72f363783b2daa42",
+    measurementId: "G-JK03B94CM2"
   };
 
-  try { await window.storage.set('rsvp:' + entry.id, JSON.stringify(entry), true); } catch(e) { console.error(e); }
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
 
-  document.getElementById('form-view').style.display = 'none';
-  document.getElementById('success-screen').className = 'success-screen visible';
-
-  if (attending) {
-    document.getElementById('success-emoji').textContent = '🌸';
-    document.getElementById('success-title').textContent = "We'll see you there!";
-    document.getElementById('success-msg').innerHTML = `Thank you so much, <em>${name}</em>! We're so excited to celebrate with you under the autumn sky.<br><br>With love, Malena & Kanin 🍂`;
-  } else {
-    document.getElementById('success-emoji').textContent = '🍃';
-    document.getElementById('success-title').textContent = "You'll be missed!";
-    document.getElementById('success-msg').innerHTML = `Thank you for letting us know, <em>${name}</em>. You'll be in our hearts on October 10th.<br><br>With love, Malena & Kanin 🧡`;
+  // ---- Seed dummy data (runs once, safe to re-run — duplicates are harmless for preview) ----
+  async function seedDummyData() {
+    const dummies = [
+      { name: 'Sarah & Tom Whitfield', email: 'swhitfield@email.com', attending: true,  plusones: 1, kidmeals: 0, allergies: ['Dairy'],              message: "So thrilled for you both! Can't wait to dance the night away 🧡" },
+      { name: 'James Okafor',          email: 'james.o@gmail.com',     attending: true,  plusones: 0, kidmeals: 0, allergies: ['Gluten/Wheat'],        message: 'Congratulations Malena & Kanin! Wishing you a lifetime of love.' },
+      { name: 'Priya Nair',            email: 'priya.nair@outlook.com',attending: true,  plusones: 1, kidmeals: 2, allergies: ['Nuts','Vegan'],         message: 'So happy for you! The kids are so excited too 🌸' },
+      { name: 'Derek Callahan',        email: 'dcallahan@work.com',    attending: false, plusones: 0, kidmeals: 0, allergies: [],                      message: "So sorry I can't make it — sending all my love from afar!" },
+      { name: 'Aunt Linda & Uncle Ray',email: 'lindamoss@aol.com',     attending: true,  plusones: 1, kidmeals: 0, allergies: ['Shellfish'],            message: 'We have been waiting for this day for so long. Love you both to the moon! 🍂' },
+      { name: 'Chloe Beaumont',        email: 'cbeaumont@me.com',      attending: false, plusones: 0, kidmeals: 0, allergies: [],                      message: '' },
+    ];
+    // Only seed if collection is empty
+    const snap = await getDocs(collection(db, 'rsvps'));
+    if (!snap.empty) return;
+    for (const d of dummies) {
+      await addDoc(collection(db, 'rsvps'), { ...d, submittedAt: serverTimestamp() });
+    }
   }
-}
+  seedDummyData();
 
-/* ---- MODAL LOGIC ---- */
-function openAdminModal(e) {
-  e.preventDefault();
-  document.getElementById('pw-input').value = '';
-  document.getElementById('pw-error').classList.remove('visible');
-  document.getElementById('pw-modal').classList.add('open');
-  setTimeout(() => document.getElementById('pw-input').focus(), 100);
-}
+  // ---- Attendance toggle ----
+  let attending = null;
+  window.setAttending = function(val) {
+    attending = val;
+    document.getElementById('btn-yes').className = 'attend-btn' + (val ? ' active-yes' : '');
+    document.getElementById('btn-no').className  = 'attend-btn' + (!val ? ' active-no'  : '');
+    document.getElementById('attending-section').className = 'attending-section' + (val ? ' visible' : '');
+  };
 
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
+  // ---- Submit RSVP ----
+  window.submitRSVP = async function() {
+    const name  = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    if (!name)            { alert('Please enter your name.'); return; }
+    if (attending === null){ alert("Please let us know if you'll be attending."); return; }
 
-function handleOverlayClick(e) {
-  if (e.target === e.currentTarget) closeModal(e.currentTarget.id);
-}
+    const btn = document.querySelector('.submit-btn');
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
 
-function checkPassword() {
-  const val = document.getElementById('pw-input').value;
-  if (val === '2161') {
-    closeModal('pw-modal');
-    openResponsesModal();
-  } else {
-    document.getElementById('pw-error').classList.add('visible');
+    const allergies = Array.from(document.querySelectorAll('input[name="allergy"]:checked')).map(c => c.value);
+    const other = document.getElementById('other-allergy').value.trim();
+    if (other) allergies.push(other);
+
+    const entry = {
+      name, email, attending,
+      plusones:  attending ? parseInt(document.getElementById('plusones').value)  : 0,
+      kidmeals:  attending ? parseInt(document.getElementById('kidmeals').value)  : 0,
+      allergies,
+      message:   document.getElementById('message').value.trim(),
+      submittedAt: serverTimestamp()
+    };
+
+    try {
+      await addDoc(collection(db, 'rsvps'), entry);
+    } catch(e) {
+      console.error(e);
+      alert('Something went wrong saving your RSVP. Please try again.');
+      btn.textContent = 'Send My RSVP 🍂';
+      btn.disabled = false;
+      return;
+    }
+
+    document.getElementById('form-view').style.display = 'none';
+    document.getElementById('success-screen').className = 'success-screen visible';
+
+    if (attending) {
+      document.getElementById('success-emoji').textContent = '🌸';
+      document.getElementById('success-title').textContent = "We'll see you there!";
+      document.getElementById('success-msg').innerHTML = `Thank you so much, <em>${name}</em>! We're so excited to celebrate with you under the autumn sky.<br><br>With love, Malena & Kanin 🍂`;
+    } else {
+      document.getElementById('success-emoji').textContent = '🍃';
+      document.getElementById('success-title').textContent = "You'll be missed!";
+      document.getElementById('success-msg').innerHTML = `Thank you for letting us know, <em>${name}</em>. You'll be in our hearts on October 10th.<br><br>With love, Malena & Kanin 🧡`;
+    }
+  };
+
+  // ---- Modal logic ----
+  window.openAdminModal = function(e) {
+    e.preventDefault();
     document.getElementById('pw-input').value = '';
-    document.getElementById('pw-input').focus();
+    document.getElementById('pw-error').classList.remove('visible');
+    document.getElementById('pw-modal').classList.add('open');
+    setTimeout(() => document.getElementById('pw-input').focus(), 100);
+  };
+
+  window.closeModal = function(id) {
+    document.getElementById(id).classList.remove('open');
+  };
+
+  window.handleOverlayClick = function(e) {
+    if (e.target === e.currentTarget) window.closeModal(e.currentTarget.id);
+  };
+
+  window.checkPassword = function() {
+    const val = document.getElementById('pw-input').value;
+    if (val === '2161') {
+      window.closeModal('pw-modal');
+      openResponsesModal();
+    } else {
+      document.getElementById('pw-error').classList.add('visible');
+      document.getElementById('pw-input').value = '';
+      document.getElementById('pw-input').focus();
+    }
+  };
+
+  async function openResponsesModal() {
+    document.getElementById('resp-modal').classList.add('open');
+    await loadAdmin();
   }
-}
 
-async function openResponsesModal() {
-  document.getElementById('resp-modal').classList.add('open');
-  await loadAdmin();
-}
+  async function loadAdmin() {
+    const guestList = document.getElementById('guest-list');
+    const statsRow  = document.getElementById('stats-row');
+    guestList.innerHTML = '<div class="no-responses">Loading…</div>';
+    statsRow.innerHTML  = '';
 
-async function loadAdmin() {
-  const guestList = document.getElementById('guest-list');
-  const statsRow = document.getElementById('stats-row');
-  guestList.innerHTML = '<div class="no-responses">Loading…</div>';
-  statsRow.innerHTML = '';
+    let entries = [];
+    try {
+      const q    = query(collection(db, 'rsvps'), orderBy('submittedAt', 'desc'));
+      const snap = await getDocs(q);
+      snap.forEach(doc => entries.push({ id: doc.id, ...doc.data() }));
+    } catch(e) {
+      console.error(e);
+      guestList.innerHTML = '<div class="no-responses">Error loading responses.</div>';
+      return;
+    }
 
-  let keys = [];
-  try { const r = await window.storage.list('rsvp:', true); keys = r ? r.keys : []; } catch(e) {}
+    if (!entries.length) {
+      guestList.innerHTML = '<div class="no-responses">No responses yet — check back soon.</div>';
+      return;
+    }
 
-  if (!keys.length) {
-    guestList.innerHTML = '<div class="no-responses">No responses yet — check back soon.</div>';
-    return;
-  }
+    const att         = entries.filter(e => e.attending);
+    const totalGuests = att.reduce((s,e) => s + 1 + (e.plusones||0), 0);
+    const totalKids   = entries.reduce((s,e) => s + (e.kidmeals||0), 0);
 
-  const entries = [];
-  for (const key of keys) {
-    try { const r = await window.storage.get(key, true); if (r) entries.push(JSON.parse(r.value)); } catch(e) {}
-  }
-  entries.sort((a,b) => parseInt(b.id) - parseInt(a.id));
-
-  const att = entries.filter(e => e.attending);
-  const totalGuests = att.reduce((s,e) => s + 1 + e.plusones, 0);
-  const totalKids = entries.reduce((s,e) => s + e.kidmeals, 0);
-
-  statsRow.innerHTML = `
-    <div class="stat-box"><div class="stat-num">${entries.length}</div><div class="stat-label">Responses</div></div>
-    <div class="stat-box"><div class="stat-num">${att.length}</div><div class="stat-label">Attending</div></div>
-    <div class="stat-box"><div class="stat-num">${totalGuests}</div><div class="stat-label">Total Guests</div></div>
-    <div class="stat-box"><div class="stat-num">${totalKids}</div><div class="stat-label">Kids Meals</div></div>
-    <div class="stat-box"><div class="stat-num">${entries.length - att.length}</div><div class="stat-label">Declining</div></div>
-  `;
-
-  guestList.innerHTML = '';
-  for (const e of entries) {
-    const card = document.createElement('div');
-    card.className = 'guest-card';
-    const allergyStr = e.allergies?.length ? e.allergies.join(', ') : 'None';
-    const msgHtml = e.message ? `<br><em style="opacity:0.7">"${e.message}"</em>` : '';
-    const details = e.attending
-      ? `<br>👥 Party of ${1 + e.plusones}${e.plusones > 0 ? ` (+${e.plusones})` : ''}&nbsp;&nbsp;${e.kidmeals > 0 ? `🧒 ${e.kidmeals} kids meal${e.kidmeals > 1 ? 's' : ''}` : ''}<br>🌿 Dietary: ${allergyStr}${msgHtml}`
-      : msgHtml;
-    card.innerHTML = `
-      <div class="guest-name">${e.name} <span class="badge ${e.attending ? 'badge-yes' : 'badge-no'}">${e.attending ? 'Attending' : 'Declining'}</span></div>
-      <div style="font-size:0.75rem;opacity:0.45;margin-bottom:6px">${e.email || '—'} · ${e.submitted}</div>
-      <div style="font-size:0.84rem;line-height:1.9">${details}</div>
+    statsRow.innerHTML = `
+      <div class="stat-box"><div class="stat-num">${entries.length}</div><div class="stat-label">Responses</div></div>
+      <div class="stat-box"><div class="stat-num">${att.length}</div><div class="stat-label">Attending</div></div>
+      <div class="stat-box"><div class="stat-num">${totalGuests}</div><div class="stat-label">Total Guests</div></div>
+      <div class="stat-box"><div class="stat-num">${totalKids}</div><div class="stat-label">Kids Meals</div></div>
+      <div class="stat-box"><div class="stat-num">${entries.length - att.length}</div><div class="stat-label">Declining</div></div>
     `;
-    guestList.appendChild(card);
+
+    guestList.innerHTML = '';
+    for (const e of entries) {
+      const submitted = e.submittedAt?.toDate
+        ? e.submittedAt.toDate().toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'})
+        : '—';
+      const allergyStr = e.allergies?.length ? e.allergies.join(', ') : 'None';
+      const msgHtml    = e.message ? `<br><em style="opacity:0.7">"${e.message}"</em>` : '';
+      const details    = e.attending
+        ? `<br>👥 Party of ${1 + (e.plusones||0)}${e.plusones > 0 ? ` (+${e.plusones})` : ''}&nbsp;&nbsp;${e.kidmeals > 0 ? `🧒 ${e.kidmeals} kids meal${e.kidmeals > 1 ? 's' : ''}` : ''}<br>🌿 Dietary: ${allergyStr}${msgHtml}`
+        : msgHtml;
+
+      const card = document.createElement('div');
+      card.className = 'guest-card';
+      card.innerHTML = `
+        <div class="guest-name">${e.name} <span class="badge ${e.attending ? 'badge-yes' : 'badge-no'}">${e.attending ? 'Attending' : 'Declining'}</span></div>
+        <div style="font-size:0.75rem;opacity:0.45;margin-bottom:6px">${e.email || '—'} · ${submitted}</div>
+        <div style="font-size:0.84rem;line-height:1.9">${details}</div>
+      `;
+      guestList.appendChild(card);
+    }
   }
-}
 </script>
 </body>
 </html>
