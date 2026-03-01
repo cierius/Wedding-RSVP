@@ -706,25 +706,6 @@
   const app = initializeApp(firebaseConfig);
   const db  = getFirestore(app);
 
-  // ---- Seed dummy data (runs once, safe to re-run — duplicates are harmless for preview) ----
-  async function seedDummyData() {
-    const dummies = [
-      { name: 'Sarah & Tom Whitfield', email: 'swhitfield@email.com', attending: true,  plusones: 1, kidmeals: 0, allergies: ['Dairy'],              message: "So thrilled for you both! Can't wait to dance the night away 🧡" },
-      { name: 'James Okafor',          email: 'james.o@gmail.com',     attending: true,  plusones: 0, kidmeals: 0, allergies: ['Gluten/Wheat'],        message: 'Congratulations Malena & Kanin! Wishing you a lifetime of love.' },
-      { name: 'Priya Nair',            email: 'priya.nair@outlook.com',attending: true,  plusones: 1, kidmeals: 2, allergies: ['Nuts','Vegan'],         message: 'So happy for you! The kids are so excited too 🌸' },
-      { name: 'Derek Callahan',        email: 'dcallahan@work.com',    attending: false, plusones: 0, kidmeals: 0, allergies: [],                      message: "So sorry I can't make it — sending all my love from afar!" },
-      { name: 'Aunt Linda & Uncle Ray',email: 'lindamoss@aol.com',     attending: true,  plusones: 1, kidmeals: 0, allergies: ['Shellfish'],            message: 'We have been waiting for this day for so long. Love you both to the moon! 🍂' },
-      { name: 'Chloe Beaumont',        email: 'cbeaumont@me.com',      attending: false, plusones: 0, kidmeals: 0, allergies: [],                      message: '' },
-    ];
-    // Only seed if collection is empty
-    const snap = await getDocs(collection(db, 'rsvps'));
-    if (!snap.empty) return;
-    for (const d of dummies) {
-      await addDoc(collection(db, 'rsvps'), { ...d, submittedAt: serverTimestamp() });
-    }
-  }
-  seedDummyData();
-
   // ---- Attendance toggle ----
   let attending = null;
   window.setAttending = function(val) {
