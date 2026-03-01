@@ -1,1 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Malena & Kanin — October 10, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Lora:ital,wght@0,400;1,400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --burnt-orange: #D4622A;
+    --amber: #E8962A;
+    --mauve: #A8455A;
+    --plum: #7A2D52;
+    --berry: #5C1F42;
+    --parchment: #F5ECD7;
+    --warm-white: #FBF6EE;
+    --bark: #5A3825;
+    --moss: #5C6B3A;
+    --leaf-gold: #C8892A;
+  }
 
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--warm-white);
+    color: var(--bark);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  .botanical-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .page-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 64px 0 48px;
+    animation: fadeUp 0.9s ease both;
+  }
+
+  .eyebrow {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--mauve);
+    letter-spacing: 0.04em;
+    margin-bottom: 16px;
+    opacity: 0.85;
+  }
+
+  .couple-names {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.4rem, 11vw, 6rem);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 0.95;
+    color: var(--burnt-orange);
+  }
+
+  .couple-names .amp { color: var(--mauve); font-size: 0.8em; }
+
+  .date-ribbon {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    margin: 22px auto 0;
+    font-family: 'Lora', serif;
+    font-size: 1.05rem;
+    color: var(--bark);
+    opacity: 0.75;
+  }
+  .date-ribbon::before, .date-ribbon::after {
+    content: '';
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--amber));
+  }
+  .date-ribbon::after { background: linear-gradient(90deg, var(--amber), transparent); }
+
+  .timing-note {
+    font-size: 0.82rem;
+    color: var(--mauve);
+    margin-top: 8px;
+    opacity: 0.8;
+    font-style: italic;
+    font-family: 'Lora', serif;
+  }
+
+  /* Leaf divider */
+  .leaf-divider {
+    text-align: center;
+    margin: 36px 0 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-content: center;
+  }
+  .leaf-divider svg { width: 90px; opacity: 0.55; }
+  .leaf-divider .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); opacity: 0.6; }
+
+  /* CARD */
+  .rsvp-card {
+    background: rgba(245, 236, 215, 0.72);
+    border: 1.5px solid rgba(200,137,42,0.25);
+    border-radius: 24px;
+    padding: 48px 44px;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 30px rgba(90,56,37,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+    animation: fadeUp 0.9s 0.2s ease both;
+  }
+  @media(max-width:520px) { .rsvp-card { padding: 30px 20px; } }
+
+  .section-label {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 1.25rem;
+    color: var(--burnt-orange);
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Fields */
+  .field-group { margin-bottom: 22px; }
+
+  label.field-label {
+    display: block;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bark);
+    opacity: 0.6;
+    margin-bottom: 7px;
+  }
+
+  input[type="text"], input[type="email"], select, textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.7);
+    border: 1.5px solid rgba(168,69,90,0.2);
+    border-radius: 12px;
+    padding: 13px 16px;
+    color: var(--bark);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+    -webkit-appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--burnt-orange);
+    background: rgba(255,255,255,0.92);
+    box-shadow: 0 0 0 3px rgba(212,98,42,0.1);
+  }
+  input::placeholder, textarea::placeholder { color: rgba(90,56,37,0.35); }
+  select option { background: #fff; color: var(--bark); }
+  textarea { resize: vertical; min-height: 100px; }
+
+  /* Attend toggle */
+  .attend-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .attend-btn {
+    padding: 16px 12px;
+    border-radius: 16px;
+    border: 1.5px solid rgba(168,69,90,0.25);
+    background: rgba(255,255,255,0.5);
+    color: var(--bark);
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .attend-btn .btn-emoji { font-size: 1.5rem; }
+  .attend-btn .btn-label { font-size: 0.72rem; font-style: normal; font-family: 'DM Sans', sans-serif; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.65; }
+  .attend-btn:hover { border-color: var(--amber); background: rgba(255,255,255,0.8); }
+  .attend-btn.active-yes {
+    background: linear-gradient(135deg, rgba(212,98,42,0.15), rgba(168,69,90,0.12));
+    border-color: var(--burnt-orange);
+    box-shadow: 0 2px 12px rgba(212,98,42,0.15);
+    color: var(--burnt-orange);
+  }
+  .attend-btn.active-no {
+    background: rgba(90,56,37,0.06);
+    border-color: rgba(90,56,37,0.25);
+    color: var(--bark);
+    opacity: 0.7;
+  }
+
+  /* Two col */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media(max-width:460px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* Allergy pill checkboxes */
+  .allergy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .check-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border-radius: 50px;
+    border: 1.5px solid rgba(168,69,90,0.2);
+    background: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.84rem;
+    color: var(--bark);
+    user-select: none;
+  }
+  .check-pill:hover { border-color: var(--amber); background: rgba(255,255,255,0.85); }
+  .check-pill input { display: none; }
+  .check-pill .pill-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(168,69,90,0.4);
+    flex-shrink: 0;
+    transition: all 0.2s;
+    background: transparent;
+  }
+  .check-pill input:checked ~ .pill-dot { background: var(--burnt-orange); border-color: var(--burnt-orange); }
+  .check-pill:has(input:checked) {
+    border-color: var(--burnt-orange);
+    background: rgba(212,98,42,0.1);
+    color: var(--burnt-orange);
+  }
+
+  .attending-section { display: none; }
+  .attending-section.visible { display: block; animation: fadeUp 0.4s ease both; }
+
+  .soft-divider { border: none; border-top: 1px solid rgba(168,69,90,0.15); margin: 28px 0; }
+
+  .field-note { font-size: 0.8rem; opacity: 0.6; line-height: 1.7; margin-bottom: 14px; font-family: 'Lora', serif; font-style: italic; }
+
+  /* Submit */
+  .submit-btn {
+    width: 100%;
+    margin-top: 28px;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--burnt-orange) 0%, var(--mauve) 100%);
+    border: none;
+    border-radius: 16px;
+    color: #fff;
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 18px rgba(212,98,42,0.3);
+  }
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,98,42,0.35); }
+  .submit-btn:active { transform: translateY(0); }
+
+  /* Success */
+  .success-screen { display: none; text-align: center; padding: 32px 0; }
+  .success-screen.visible { display: block; animation: fadeUp 0.6s ease both; }
+  .success-emoji { font-size: 3.5rem; margin-bottom: 16px; }
+  .success-title { font-family: 'Playfair Display', serif; font-size: 2rem; font-style: italic; color: var(--burnt-orange); margin-bottom: 12px; }
+  .success-msg { font-size: 0.9rem; line-height: 1.8; color: var(--bark); opacity: 0.75; font-family: 'Lora', serif; font-style: italic; }
+
+  /* Admin */
+  .admin-link { text-align: center; margin-top: 36px; animation: fadeUp 0.9s 0.4s ease both; }
+  .admin-link a { font-family: 'Lora', serif; font-style: italic; font-size: 0.82rem; color: var(--mauve); opacity: 0.4; text-decoration: none; transition: opacity 0.3s; }
+  .admin-link a:hover { opacity: 0.9; }
+  .admin-panel { display: none; margin-top: 28px; }
+  .admin-panel.visible { display: block; animation: fadeUp 0.4s ease both; }
+
+  .stats-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+  .stat-box {
+    flex: 1; min-width: 90px;
+    background: rgba(245,236,215,0.8);
+    border: 1.5px solid rgba(200,137,42,0.2);
+    border-radius: 16px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--burnt-orange); line-height: 1; }
+  .stat-label { font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.5; margin-top: 4px; }
+
+  .guest-card {
+    background: rgba(245,236,215,0.8);
+    border: 1.5px solid rgba(200,137,42,0.18);
+    border-radius: 16px;
+    padding: 18px 22px;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    line-height: 1.9;
+  }
+  .guest-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-style: italic; color: var(--bark); margin-bottom: 4px; }
+  .badge { display: inline-block; padding: 2px 12px; border-radius: 50px; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; font-family: 'DM Sans', sans-serif; margin-left: 8px; vertical-align: middle; }
+  .badge-yes { background: rgba(212,98,42,0.12); color: var(--burnt-orange); border: 1px solid rgba(212,98,42,0.3); }
+  .badge-no { background: rgba(90,56,37,0.07); color: var(--bark); border: 1px solid rgba(90,56,37,0.15); opacity: 0.7; }
+  .no-responses { text-align:center; opacity:0.4; font-style:italic; font-family:'Lora',serif; padding:24px 0; font-size:1rem; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Botanical SVG Background -->
+<div class="botanical-bg" aria-hidden="true">
+  <svg width="100%" height="100%" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <!-- Top-left branch cluster -->
+    <g opacity="0.2">
+      <path d="M -20 30 Q 90 70 150 150 Q 210 230 175 330" fill="none" stroke="#C8892A" stroke-width="2"/>
+      <path d="M 70 90 Q 35 145 15 200" fill="none" stroke="#C8892A" stroke-width="1.2"/>
+      <path d="M 110 115 Q 148 158 138 218" fill="none" stroke="#C8892A" stroke-width="1.2"/>
+      <ellipse cx="14" cy="203" rx="22" ry="10" transform="rotate(-30 14 203)" fill="#D4622A" opacity="0.55"/>
+      <ellipse cx="138" cy="222" rx="19" ry="9" transform="rotate(22 138 222)" fill="#A8455A" opacity="0.5"/>
+      <ellipse cx="64" cy="228" rx="24" ry="10" transform="rotate(-18 64 228)" fill="#E8962A" opacity="0.5"/>
+      <ellipse cx="172" cy="336" rx="17" ry="8" transform="rotate(12 172 336)" fill="#7A2D52" opacity="0.45"/>
+      <ellipse cx="95" cy="165" rx="13" ry="6" transform="rotate(-10 95 165)" fill="#5C6B3A" opacity="0.4"/>
+      <!-- small berries -->
+      <circle cx="48" cy="310" r="5" fill="#E8962A" opacity="0.5"/>
+      <circle cx="56" cy="321" r="4" fill="#D4622A" opacity="0.45"/>
+      <circle cx="40" cy="323" r="4.5" fill="#A8455A" opacity="0.4"/>
+    </g>
+
+    <!-- Top-right branch cluster (mirrored) -->
+    <g opacity="0.18" transform="translate(1200,0) scale(-1,1)">
+      <path d="M -20 20 Q 100 75 165 165 Q 225 255 190 360" fill="none" stroke="#A8455A" stroke-width="2"/>
+      <path d="M 80 95 Q 48 155 28 210" fill="none" stroke="#A8455A" stroke-width="1.2"/>
+      <path d="M 125 125 Q 165 175 155 240" fill="none" stroke="#A8455A" stroke-width="1.2"/>
+      <ellipse cx="27" cy="215" rx="21" ry="10" transform="rotate(-25 27 215)" fill="#D4622A" opacity="0.55"/>
+      <ellipse cx="155" cy="244" rx="20" ry="9" transform="rotate(20 155 244)" fill="#E8962A" opacity="0.5"/>
+      <ellipse cx="185" cy="365" rx="17" ry="8" transform="rotate(10 185 365)" fill="#5C6B3A" opacity="0.45"/>
+      <circle cx="52" cy="320" r="5" fill="#C8892A" opacity="0.45"/>
+      <circle cx="60" cy="332" r="4" fill="#D4622A" opacity="0.4"/>
+    </g>
+
+    <!-- Bottom-left corner -->
+    <g opacity="0.16" transform="translate(0,900) scale(1,-1)">
+      <path d="M -10 0 Q 85 45 125 130 Q 165 215 135 305" fill="none" stroke="#C8892A" stroke-width="1.8"/>
+      <ellipse cx="72" cy="168" rx="24" ry="11" transform="rotate(-20 72 168)" fill="#D4622A" opacity="0.5"/>
+      <ellipse cx="130" cy="240" rx="20" ry="9" transform="rotate(14 130 240)" fill="#E8962A" opacity="0.45"/>
+      <ellipse cx="50" cy="210" rx="15" ry="7" transform="rotate(-8 50 210)" fill="#5C6B3A" opacity="0.4"/>
+    </g>
+
+    <!-- Bottom-right corner -->
+    <g opacity="0.16" transform="translate(1200,900) scale(-1,-1)">
+      <path d="M -10 0 Q 90 50 132 135 Q 174 220 144 312" fill="none" stroke="#A8455A" stroke-width="1.8"/>
+      <ellipse cx="78" cy="175" rx="22" ry="10" transform="rotate(-16 78 175)" fill="#A8455A" opacity="0.5"/>
+      <ellipse cx="138" cy="250" rx="18" ry="9" transform="rotate(18 138 250)" fill="#7A2D52" opacity="0.42"/>
+    </g>
+
+    <!-- Middle accent leaves (subtle) -->
+    <g opacity="0.08">
+      <ellipse cx="30" cy="500" rx="30" ry="12" transform="rotate(-40 30 500)" fill="#E8962A"/>
+      <ellipse cx="1170" cy="460" rx="28" ry="11" transform="rotate(35 1170 460)" fill="#D4622A"/>
+    </g>
+  </svg>
+</div>
+
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="eyebrow">Together with their families</div>
+    <div class="couple-names">Malena <span class="amp">&amp;</span> Kanin</div>
+    <div class="date-ribbon">October 10, 2026</div>
+    <div class="timing-note">Arrive from 3:30 · Ceremony at 4:00 pm</div>
+  </header>
+
+  <!-- Leaf divider -->
+  <div class="leaf-divider">
+    <svg viewBox="0 0 100 30" xmlns="http://www.w3.org/2000/svg" fill="none">
+      <path d="M5 15 Q25 5 50 15 Q75 25 95 15" stroke="#C8892A" stroke-width="1.2"/>
+      <ellipse cx="20" cy="11" rx="8" ry="4" transform="rotate(-20 20 11)" fill="#D4622A" opacity="0.65"/>
+      <ellipse cx="50" cy="16" rx="9" ry="4.5" transform="rotate(5 50 16)" fill="#A8455A" opacity="0.6"/>
+      <ellipse cx="78" cy="13" rx="7" ry="3.5" transform="rotate(-10 78 13)" fill="#E8962A" opacity="0.65"/>
+    </svg>
+    <div class="dot"></div>
+    <svg viewBox="0 0 100 30" xmlns="http://www.w3.org/2000/svg" fill="none" style="transform:scaleX(-1)">
+      <path d="M5 15 Q25 5 50 15 Q75 25 95 15" stroke="#C8892A" stroke-width="1.2"/>
+      <ellipse cx="20" cy="11" rx="8" ry="4" transform="rotate(-20 20 11)" fill="#D4622A" opacity="0.65"/>
+      <ellipse cx="50" cy="16" rx="9" ry="4.5" transform="rotate(5 50 16)" fill="#A8455A" opacity="0.6"/>
+      <ellipse cx="78" cy="13" rx="7" ry="3.5" transform="rotate(-10 78 13)" fill="#E8962A" opacity="0.65"/>
+    </svg>
+  </div>
+
+  <!-- RSVP CARD -->
+  <div class="rsvp-card">
+    <div id="form-view">
+
+      <div class="section-label">🍂 Will you join us?</div>
+      <div class="attend-toggle">
+        <button class="attend-btn" id="btn-yes" onclick="setAttending(true)">
+          <span class="btn-emoji">🌸</span>
+          <span>Joyfully Accepts</span>
+          <span class="btn-label">I'll be there!</span>
+        </button>
+        <button class="attend-btn" id="btn-no" onclick="setAttending(false)">
+          <span class="btn-emoji">🍃</span>
+          <span>Regretfully Declines</span>
+          <span class="btn-label">Unable to attend</span>
+        </button>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Your Full Name</label>
+        <input type="text" id="name" placeholder="e.g. Jane Smith"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Email Address</label>
+        <input type="email" id="email" placeholder="your@email.com"/>
+      </div>
+
+      <!-- Attending extras -->
+      <div id="attending-section" class="attending-section">
+        <hr class="soft-divider"/>
+        <div class="section-label">🍁 Your Party</div>
+        <div class="two-col">
+          <div class="field-group">
+            <label class="field-label">Plus-Ones Joining You</label>
+            <select id="plusones">
+              <option value="0">Just me</option>
+              <option value="1">+1 guest</option>
+              <option value="2">+2 guests</option>
+              <option value="3">+3 guests</option>
+              <option value="4">+4 guests</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Children's Meals Needed</label>
+            <select id="kidmeals">
+              <option value="0">None needed</option>
+              <option value="1">1 kids meal</option>
+              <option value="2">2 kids meals</option>
+              <option value="3">3 kids meals</option>
+              <option value="4">4 kids meals</option>
+            </select>
+          </div>
+        </div>
+
+        <hr class="soft-divider"/>
+        <div class="section-label">🌿 Dining</div>
+        <p class="field-note">Our chef is preparing a handcrafted pasta dinner. Please let us know of any allergies or restrictions so we can make sure everyone is well taken care of.</p>
+
+        <label class="field-label" style="margin-bottom:10px">Food Allergies / Dietary Needs</label>
+        <div class="allergy-grid">
+          <label class="check-pill"><input type="checkbox" name="allergy" value="Gluten/Wheat"/><span class="pill-dot"></span> Gluten / Wheat</label>
+          <label class="check-pill"><input type="checkbox" name="allergy" value="Dairy"/><span class="pill-dot"></span> Dairy / Lactose</label>
+          <label class="check-pill"><input type="checkbox" name="allergy" value="Nuts"/><span class="pill-dot"></span> Tree Nuts / Peanuts</label>
+          <label class="check-pill"><input type="checkbox" name="allergy" value="Shellfish"/><span class="pill-dot"></span> Shellfish</label>
+          <label class="check-pill"><input type="checkbox" name="allergy" value="Vegetarian"/><span class="pill-dot"></span> Vegetarian</label>
+          <label class="check-pill"><input type="checkbox" name="allergy" value="Vegan"/><span class="pill-dot"></span> Vegan</label>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Other / Additional Notes</label>
+          <input type="text" id="other-allergy" placeholder="Any other allergies or dietary needs…"/>
+        </div>
+      </div>
+
+      <hr class="soft-divider"/>
+      <div class="section-label">✉️ A Note for the Couple</div>
+      <div class="field-group">
+        <textarea id="message" placeholder="Share your love and well-wishes for Malena & Kanin…"></textarea>
+      </div>
+
+      <button class="submit-btn" onclick="submitRSVP()">Send My RSVP 🍂</button>
+    </div>
+
+    <!-- SUCCESS -->
+    <div id="success-screen" class="success-screen">
+      <div class="success-emoji" id="success-emoji">🌸</div>
+      <div class="success-title" id="success-title"></div>
+      <p class="success-msg" id="success-msg"></p>
+    </div>
+  </div>
+
+  <!-- Admin tiny link -->
+  <div class="admin-link">
+    <a href="#" onclick="openAdminModal(event)">Malena & Kanin · View Responses</a>
+  </div>
+
+</div><!-- end page-wrap -->
+
+<!-- ===== PASSWORD MODAL ===== -->
+<div id="pw-modal" class="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal-card" id="pw-card">
+    <button class="modal-close" onclick="closeModal('pw-modal')">✕</button>
+    <div class="modal-leaf">🍁</div>
+    <div class="modal-title">Bride & Groom Only</div>
+    <p class="modal-sub">Enter your password to view guest responses.</p>
+    <input type="password" id="pw-input" class="modal-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPassword()"/>
+    <div id="pw-error" class="pw-error">Incorrect password — try again.</div>
+    <button class="modal-btn" onclick="checkPassword()">Unlock Responses 🌿</button>
+  </div>
+</div>
+
+<!-- ===== RESPONSES MODAL ===== -->
+<div id="resp-modal" class="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal-card modal-card--wide" id="resp-card">
+    <button class="modal-close" onclick="closeModal('resp-modal')">✕</button>
+    <div class="modal-title" style="margin-bottom:6px">🍁 Guest Responses</div>
+    <div id="stats-row" class="stats-row"></div>
+    <div id="guest-list" class="guest-list-scroll"></div>
+  </div>
+</div>
+
+<style>
+  /* Admin link */
+  .admin-link { text-align:center; margin-top:36px; padding-bottom:20px; }
+  .admin-link a { font-family:'Lora',serif; font-style:italic; font-size:0.82rem; color:var(--mauve); opacity:0.4; text-decoration:none; transition:opacity 0.3s; }
+  .admin-link a:hover { opacity:0.85; }
+
+  /* Modal overlay */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(61,21,35,0.55);
+    backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.25s ease;
+  }
+  .modal-overlay.open { display: flex; }
+
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes slideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  /* Modal card */
+  .modal-card {
+    background: var(--warm-white);
+    border: 1.5px solid rgba(200,137,42,0.3);
+    border-radius: 24px;
+    padding: 44px 40px;
+    max-width: 400px;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(61,21,35,0.25);
+    animation: slideUp 0.3s ease both;
+    text-align: center;
+  }
+  .modal-card--wide {
+    max-width: 680px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+  @media(max-width:520px) { .modal-card { padding: 32px 22px; } }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 18px;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    color: var(--bark);
+    opacity: 0.4;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    line-height: 1;
+  }
+  .modal-close:hover { opacity: 0.9; }
+
+  .modal-leaf { font-size: 2.2rem; margin-bottom: 12px; }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.5rem;
+    color: var(--burnt-orange);
+    margin-bottom: 10px;
+  }
+
+  .modal-sub {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--bark);
+    opacity: 0.6;
+    margin-bottom: 22px;
+    line-height: 1.6;
+  }
+
+  .modal-input {
+    width: 100%;
+    background: rgba(255,255,255,0.85);
+    border: 1.5px solid rgba(168,69,90,0.25);
+    border-radius: 12px;
+    padding: 13px 16px;
+    color: var(--bark);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    text-align: center;
+    letter-spacing: 0.15em;
+    margin-bottom: 10px;
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  .modal-input:focus {
+    border-color: var(--burnt-orange);
+    box-shadow: 0 0 0 3px rgba(212,98,42,0.1);
+  }
+
+  .pw-error {
+    font-size: 0.78rem;
+    color: var(--mauve);
+    margin-bottom: 14px;
+    min-height: 1.2em;
+    display: none;
+  }
+  .pw-error.visible { display: block; }
+
+  .modal-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--burnt-orange), var(--mauve));
+    border: none;
+    border-radius: 14px;
+    color: #fff;
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(212,98,42,0.28);
+  }
+  .modal-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(212,98,42,0.32); }
+
+  /* Stats inside modal */
+  .stats-row { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; flex-shrink:0; }
+  .stat-box { flex:1; min-width:80px; background:rgba(245,236,215,0.9); border:1.5px solid rgba(200,137,42,0.2); border-radius:14px; padding:12px 8px; text-align:center; }
+  .stat-num { font-family:'Playfair Display',serif; font-size:1.8rem; color:var(--burnt-orange); line-height:1; }
+  .stat-label { font-size:0.58rem; letter-spacing:0.12em; text-transform:uppercase; opacity:0.5; margin-top:3px; }
+
+  /* Guest list scroll area */
+  .guest-list-scroll { overflow-y: auto; flex: 1; padding-right: 4px; }
+  .guest-list-scroll::-webkit-scrollbar { width: 4px; }
+  .guest-list-scroll::-webkit-scrollbar-thumb { background: rgba(200,137,42,0.3); border-radius: 4px; }
+
+  .guest-card { background:rgba(245,236,215,0.85); border:1.5px solid rgba(200,137,42,0.18); border-radius:16px; padding:16px 20px; margin-bottom:10px; font-size:0.85rem; line-height:1.9; }
+  .guest-name { font-family:'Playfair Display',serif; font-size:1.1rem; font-style:italic; color:var(--bark); margin-bottom:4px; }
+  .badge { display:inline-block; padding:2px 12px; border-radius:50px; font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; font-family:'DM Sans',sans-serif; margin-left:8px; vertical-align:middle; }
+  .badge-yes { background:rgba(212,98,42,0.12); color:var(--burnt-orange); border:1px solid rgba(212,98,42,0.3); }
+  .badge-no { background:rgba(90,56,37,0.07); color:var(--bark); border:1px solid rgba(90,56,37,0.15); opacity:0.7; }
+  .no-responses { text-align:center; opacity:0.4; font-style:italic; font-family:'Lora',serif; padding:24px 0; font-size:1rem; }
+</style>
+
+<script>
+// ---- DUMMY DATA SEEDER (remove before going live) ----
+async function seedDummyData() {
+  const dummies = [
+    { id: '1700000001000', name: 'Sarah & Tom Whitfield', email: 'swhitfield@email.com', attending: true, plusones: 1, kidmeals: 0, allergies: ['Dairy'], message: "So thrilled for you both! Can't wait to dance the night away 🧡", submitted: 'September 1, 2026' },
+    { id: '1700000002000', name: 'James Okafor', email: 'james.o@gmail.com', attending: true, plusones: 0, kidmeals: 0, allergies: ['Gluten/Wheat'], message: 'Congratulations Malena & Kanin! Wishing you a lifetime of love.', submitted: 'September 3, 2026' },
+    { id: '1700000003000', name: 'Priya Nair', email: 'priya.nair@outlook.com', attending: true, plusones: 1, kidmeals: 2, allergies: ['Nuts', 'Vegan'], message: 'So happy for you! The kids are so excited too 🌸', submitted: 'September 5, 2026' },
+    { id: '1700000004000', name: 'Derek Callahan', email: 'dcallahan@work.com', attending: false, plusones: 0, kidmeals: 0, allergies: [], message: 'So sorry I can\'t make it — sending all my love from afar!', submitted: 'September 7, 2026' },
+    { id: '1700000005000', name: 'Aunt Linda & Uncle Ray', email: 'lindamoss@aol.com', attending: true, plusones: 1, kidmeals: 0, allergies: ['Shellfish'], message: 'We have been waiting for this day for so long. Love you both to the moon! 🍂', submitted: 'September 9, 2026' },
+    { id: '1700000006000', name: 'Chloe Beaumont', email: 'cbeaumont@me.com', attending: false, plusones: 0, kidmeals: 0, allergies: [], message: '', submitted: 'September 10, 2026' },
+  ];
+  for (const d of dummies) {
+    try { await window.storage.set('rsvp:' + d.id, JSON.stringify(d), true); } catch(e) {}
+  }
+}
+seedDummyData();
+// ---- END DUMMY DATA ----
+
+let attending = null;
+
+function setAttending(val) {
+  attending = val;
+  document.getElementById('btn-yes').className = 'attend-btn' + (val ? ' active-yes' : '');
+  document.getElementById('btn-no').className = 'attend-btn' + (!val ? ' active-no' : '');
+  document.getElementById('attending-section').className = 'attending-section' + (val ? ' visible' : '');
+}
+
+async function submitRSVP() {
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  if (!name) { alert('Please enter your name.'); return; }
+  if (attending === null) { alert("Please let us know if you'll be attending."); return; }
+
+  const allergies = Array.from(document.querySelectorAll('input[name="allergy"]:checked')).map(c => c.value);
+  const other = document.getElementById('other-allergy').value.trim();
+  if (other) allergies.push(other);
+
+  const entry = {
+    id: Date.now().toString(),
+    name, email, attending,
+    plusones: attending ? parseInt(document.getElementById('plusones').value) : 0,
+    kidmeals: attending ? parseInt(document.getElementById('kidmeals').value) : 0,
+    allergies,
+    message: document.getElementById('message').value.trim(),
+    submitted: new Date().toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'})
+  };
+
+  try { await window.storage.set('rsvp:' + entry.id, JSON.stringify(entry), true); } catch(e) { console.error(e); }
+
+  document.getElementById('form-view').style.display = 'none';
+  document.getElementById('success-screen').className = 'success-screen visible';
+
+  if (attending) {
+    document.getElementById('success-emoji').textContent = '🌸';
+    document.getElementById('success-title').textContent = "We'll see you there!";
+    document.getElementById('success-msg').innerHTML = `Thank you so much, <em>${name}</em>! We're so excited to celebrate with you under the autumn sky.<br><br>With love, Malena & Kanin 🍂`;
+  } else {
+    document.getElementById('success-emoji').textContent = '🍃';
+    document.getElementById('success-title').textContent = "You'll be missed!";
+    document.getElementById('success-msg').innerHTML = `Thank you for letting us know, <em>${name}</em>. You'll be in our hearts on October 10th.<br><br>With love, Malena & Kanin 🧡`;
+  }
+}
+
+/* ---- MODAL LOGIC ---- */
+function openAdminModal(e) {
+  e.preventDefault();
+  document.getElementById('pw-input').value = '';
+  document.getElementById('pw-error').classList.remove('visible');
+  document.getElementById('pw-modal').classList.add('open');
+  setTimeout(() => document.getElementById('pw-input').focus(), 100);
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function handleOverlayClick(e) {
+  if (e.target === e.currentTarget) closeModal(e.currentTarget.id);
+}
+
+function checkPassword() {
+  const val = document.getElementById('pw-input').value;
+  if (val === '2161') {
+    closeModal('pw-modal');
+    openResponsesModal();
+  } else {
+    document.getElementById('pw-error').classList.add('visible');
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+}
+
+async function openResponsesModal() {
+  document.getElementById('resp-modal').classList.add('open');
+  await loadAdmin();
+}
+
+async function loadAdmin() {
+  const guestList = document.getElementById('guest-list');
+  const statsRow = document.getElementById('stats-row');
+  guestList.innerHTML = '<div class="no-responses">Loading…</div>';
+  statsRow.innerHTML = '';
+
+  let keys = [];
+  try { const r = await window.storage.list('rsvp:', true); keys = r ? r.keys : []; } catch(e) {}
+
+  if (!keys.length) {
+    guestList.innerHTML = '<div class="no-responses">No responses yet — check back soon.</div>';
+    return;
+  }
+
+  const entries = [];
+  for (const key of keys) {
+    try { const r = await window.storage.get(key, true); if (r) entries.push(JSON.parse(r.value)); } catch(e) {}
+  }
+  entries.sort((a,b) => parseInt(b.id) - parseInt(a.id));
+
+  const att = entries.filter(e => e.attending);
+  const totalGuests = att.reduce((s,e) => s + 1 + e.plusones, 0);
+  const totalKids = entries.reduce((s,e) => s + e.kidmeals, 0);
+
+  statsRow.innerHTML = `
+    <div class="stat-box"><div class="stat-num">${entries.length}</div><div class="stat-label">Responses</div></div>
+    <div class="stat-box"><div class="stat-num">${att.length}</div><div class="stat-label">Attending</div></div>
+    <div class="stat-box"><div class="stat-num">${totalGuests}</div><div class="stat-label">Total Guests</div></div>
+    <div class="stat-box"><div class="stat-num">${totalKids}</div><div class="stat-label">Kids Meals</div></div>
+    <div class="stat-box"><div class="stat-num">${entries.length - att.length}</div><div class="stat-label">Declining</div></div>
+  `;
+
+  guestList.innerHTML = '';
+  for (const e of entries) {
+    const card = document.createElement('div');
+    card.className = 'guest-card';
+    const allergyStr = e.allergies?.length ? e.allergies.join(', ') : 'None';
+    const msgHtml = e.message ? `<br><em style="opacity:0.7">"${e.message}"</em>` : '';
+    const details = e.attending
+      ? `<br>👥 Party of ${1 + e.plusones}${e.plusones > 0 ? ` (+${e.plusones})` : ''}&nbsp;&nbsp;${e.kidmeals > 0 ? `🧒 ${e.kidmeals} kids meal${e.kidmeals > 1 ? 's' : ''}` : ''}<br>🌿 Dietary: ${allergyStr}${msgHtml}`
+      : msgHtml;
+    card.innerHTML = `
+      <div class="guest-name">${e.name} <span class="badge ${e.attending ? 'badge-yes' : 'badge-no'}">${e.attending ? 'Attending' : 'Declining'}</span></div>
+      <div style="font-size:0.75rem;opacity:0.45;margin-bottom:6px">${e.email || '—'} · ${e.submitted}</div>
+      <div style="font-size:0.84rem;line-height:1.9">${details}</div>
+    `;
+    guestList.appendChild(card);
+  }
+}
+</script>
+</body>
+</html>
