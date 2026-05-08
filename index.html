@@ -720,7 +720,7 @@
     const entry = {
       name, email, attending,
       plusones:  attending ? parseInt(document.getElementById('plusones').value)  : 0,
-      kidmeals:  attending ? parseInt(document.getElementById('kidmeals').value)  : 0,
+      kidmeals : 0,
       allergies,
       message:   document.getElementById('message').value.trim(),
       submittedAt: serverTimestamp()
